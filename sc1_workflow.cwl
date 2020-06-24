@@ -98,6 +98,11 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  get_goldstandard:
+    run: get_goldstandard.cwl
+    in: []
+    out: [goldstandard]
+
   check_docker_status:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/check_status.cwl
     in:
@@ -235,9 +240,7 @@ steps:
       - id: inputfile
         source: "#run_docker/predictions"
       - id: goldstandard
-        default:
-          class: File
-          location: "/goldstandard/test.txt"
+        source: "#get_goldstandard/goldstandard"
       - id: check_validation_finished 
         source: "#check_status/finished"
     out:
