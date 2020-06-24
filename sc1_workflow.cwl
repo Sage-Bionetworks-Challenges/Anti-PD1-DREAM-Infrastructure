@@ -237,7 +237,7 @@ steps:
       - id: goldstandard
         default:
           class: File
-          location: "/home01/centos/goldstandard/test.txt"
+          location: "/goldstandard/test.txt"
       - id: check_validation_finished 
         source: "#check_status/finished"
     out:
