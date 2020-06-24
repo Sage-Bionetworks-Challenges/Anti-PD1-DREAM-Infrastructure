@@ -30,6 +30,34 @@ outputs: []
 
 steps:
 
+  set_submitter_folder_permissions:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
+    in:
+      - id: entityid
+        source: "#submitterUploadSynId"
+      # Must update the principal id here
+      - id: principalid
+        valueFrom: "3386496"
+      - id: permissions
+        valueFrom: "download"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: []
+
+  set_admin_folder_permissions:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
+    in:
+      - id: entityid
+        source: "#adminUploadSynId"
+      # Must update the principal id here
+      - id: principalid
+        valueFrom: "3386496"
+      - id: permissions
+        valueFrom: "download"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: []
+
   get_docker_submission:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/get_submission.cwl
     in:
