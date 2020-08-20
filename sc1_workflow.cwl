@@ -162,8 +162,7 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        # TODO: update
-        valueFrom: "/tmp"
+        valueFrom: "/home01/centos/challenge_data/CM_026_formatted_synthetic_data_subset"
       - id: docker_script
         default:
           class: File
