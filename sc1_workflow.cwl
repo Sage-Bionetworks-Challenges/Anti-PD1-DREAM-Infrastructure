@@ -129,8 +129,7 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        # TODO: update
-        valueFrom: "/tmp"
+        valueFrom: "/home01/centos/challenge_data/CM_026_formatted_synthetic_data_subset"
       - id: docker_script
         default:
           class: File
@@ -237,7 +236,7 @@ steps:
       - id: goldstandard
         default:
           class: File
-          location: "/home01/centos/goldstandard/test.txt"
+          location: "/home01/centos/challenge_data/synthetic_gold_standard_data.txt"
       - id: check_validation_finished 
         source: "#check_status/finished"
     out:
