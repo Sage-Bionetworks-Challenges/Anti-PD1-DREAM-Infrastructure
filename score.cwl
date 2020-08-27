@@ -27,6 +27,12 @@ inputs:
     inputBinding:
       prefix: -r
 
+  - id: question
+    type: string?
+    default: 1
+    inputBinding:
+      prefix: -q
+
   - id: check_validation_finished
     type: boolean?
 
