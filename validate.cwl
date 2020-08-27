@@ -1,6 +1,6 @@
 #!/usr/bin/env cwl-runner
 #
-# Example validate submission file
+# Validate submission file
 #
 cwlVersion: v1.0
 class: CommandLineTool
