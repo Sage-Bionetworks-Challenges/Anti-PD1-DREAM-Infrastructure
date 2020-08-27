@@ -4,27 +4,34 @@
 #
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: python
+baseCommand: [python, validate.py]
 
 hints:
   DockerRequirement:
-    dockerPull: python:3.7
+    dockerPull: sagebionetworks/synapsepythonclient:v2.1.1
 
 inputs:
 
   - id: entity_type
     type: string
+    inputBinding:
+      prefix: -e
+
   - id: inputfile
     type: File?
+    inputBinding:
+      prefix: -s
 
-arguments:
-  - valueFrom: validate.py
-  - valueFrom: $(inputs.inputfile)
-    prefix: -s
-  - valueFrom: results.json
-    prefix: -r
-  - valueFrom: $(inputs.entity_type)
-    prefix: -e
+  - id: goldstandard
+    type: File?
+    inputBinding:
+      prefix: -g
+
+  - id: output
+    type: string?
+    default: results.json
+    inputBinding:
+      prefix: -r
 
 requirements:
   - class: InlineJavascriptRequirement
@@ -35,26 +42,43 @@ requirements:
           #!/usr/bin/env python
           import argparse
           import json
+          import math
+
+          import pandas as pd
+
           parser = argparse.ArgumentParser()
           parser.add_argument("-r", "--results", required=True, help="validation results")
           parser.add_argument("-e", "--entity_type", required=True, help="synapse entity type downloaded")
           parser.add_argument("-s", "--submission_file", help="Submission File")
+          parser.add_argument("-g", "--goldstandard", help="Goldstandard for scoring")
 
           args = parser.parse_args()
-          
+          invalid_reasons = []
+          prediction_file_status = "VALIDATED"
+
           if args.submission_file is None:
-              prediction_file_status = "INVALID"
-              invalid_reasons = ['Expected FileEntity type but found ' + args.entity_type]
+              invalid_reasons.append(
+                'Expected FileEntity type but found ' + args.entity_type
+              )
           else:
-              with open(args.submission_file,"r") as sub_file:
-                  message = sub_file.read()
-              invalid_reasons = []
-              prediction_file_status = "VALIDATED"
-              if not message.startswith("test"):
-                  invalid_reasons.append("Submission must have test column")
+              subdf = pd.read_csv(args.submission_file)
+
+              if not all(subdf.columns == ["patientID", "prediction"]):
+                  invalid_reasons.append("Submission must have patientID and prediction column")
                   prediction_file_status = "INVALID"
+
+              all_numbers = all(subdf['prediction'].apply(
+                  lambda x: (isinstance(x, int) or isinstance(x, float)) and not math.isnan(x)
+              ))
+              if not all_numbers:
+                  invalid_reasons.append("Submission prediction column must be all numbers and not null")
+
+          if invalid_reasons:
+            prediction_file_status = "INVALID"
+
           result = {'submission_errors': "\n".join(invalid_reasons),
                     'submission_status': prediction_file_status}
+
           with open(args.results, 'w') as o:
               o.write(json.dumps(result))
      
@@ -63,7 +87,7 @@ outputs:
   - id: results
     type: File
     outputBinding:
-      glob: results.json   
+      glob: $(inputs.output)
 
   - id: status
     type: string
