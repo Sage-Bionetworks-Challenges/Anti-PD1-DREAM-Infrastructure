@@ -29,7 +29,7 @@ inputs:
 
   - id: question
     type: string?
-    default: 1
+    default: '1'
     inputBinding:
       prefix: -q
 
