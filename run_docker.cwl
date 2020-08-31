@@ -27,6 +27,8 @@ inputs:
     type: string
   - id: docker_script
     type: File
+  - id: previous
+    type: boolean?
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
