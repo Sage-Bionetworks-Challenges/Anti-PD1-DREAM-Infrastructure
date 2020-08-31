@@ -86,10 +86,8 @@ steps:
   validate_docker:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/validate_docker.cwl
     in:
-      - id: docker_repository
-        source: "#get_docker_submission/docker_repository"
-      - id: docker_digest
-        source: "#get_docker_submission/docker_digest"
+      - id: submissionid
+        source: "#submissionId"
       - id: synapse_config
         source: "#synapseConfig"
     out:
