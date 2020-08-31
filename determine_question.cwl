@@ -31,9 +31,9 @@ expression: |
   ${
     if(inputs.queue == "9614434" || inputs.queue == "9614446"){
       return {question: "1"};
-    } else if (inputs.queue == "9614591"){
+    } else if (inputs.queue == "9614591" || inputs.queue == "9614593"){
       return {question: "2"};
-    } else if (inputs.queue == "9614592"){
+    } else if (inputs.queue == "9614592" || inputs.queue == "9614594"){
       return {question: "3"};
     } else {
       throw 'invalid queue';

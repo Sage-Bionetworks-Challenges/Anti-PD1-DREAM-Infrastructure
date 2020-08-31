@@ -381,6 +381,14 @@ steps:
         source: "#validation_email_real/finished"
     out: [finished]
 
+  determine_question:
+    run: determine_question.cwl
+    in:
+      - id: queue
+        source: "#get_docker_submission/evaluation_id"
+    out:
+      - id: question
+
   scoring:
     run: score.cwl
     in:
@@ -390,6 +398,8 @@ steps:
         source: "#get_goldstandard/goldstandard"
       - id: check_validation_finished 
         source: "#check_status/finished"
+      - id: question
+        source: "#determine_question/question"
     out:
       - id: results
       
