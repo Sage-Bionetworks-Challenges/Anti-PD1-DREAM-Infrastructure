@@ -41,3 +41,10 @@ where:
 * `submitterUploadSynId` - ID of a Synapse folder accessible to the submitter
 * `workflowSynapseId` - ID of the Synapse entity containing a reference to the workflow file(s)
 * `synapseConfig` - filepath to your Synapse credentials
+
+
+## Creating logging Docker volume / container
+```
+docker volume create --driver local --opt type=none --opt device=/path/to/logging/folder --opt o=bind  logging
+docker run -it --name logging -v logging:/logging centos /bin/bash
+```
