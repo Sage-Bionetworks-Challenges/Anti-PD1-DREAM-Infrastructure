@@ -27,6 +27,8 @@ inputs:
     type: string
   - id: docker_script
     type: File
+  - id: store
+    type: boolean?
   - id: previous
     type: boolean?
 
@@ -38,6 +40,8 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
+  - valueFrom: $(inputs.store)
+    prefix: --store
   - valueFrom: $(inputs.status)
     prefix: --status
   - valueFrom: $(inputs.parentid)

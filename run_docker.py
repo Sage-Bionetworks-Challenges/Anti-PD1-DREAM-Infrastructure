@@ -1,12 +1,9 @@
 """Run training synthetic docker models"""
 from __future__ import print_function
 import argparse
-from functools import partial
 import getpass
 import os
-import signal
 import subprocess
-import sys
 import time
 
 import docker
@@ -24,18 +21,22 @@ def create_log_file(log_filename, log_text=None):
             log_file.write("No Logs")
 
 
-def store_log_file(syn, log_filename, parentid, test=False):
+def store_log_file(syn, log_filename, parentid, store=True):
     """Store log file"""
     statinfo = os.stat(log_filename)
     if statinfo.st_size > 0 and statinfo.st_size/1000.0 <= 50:
         ent = synapseclient.File(log_filename, parent=parentid)
         # Don't store if test
-        if not test:
+        if store:
             try:
                 syn.store(ent)
             except synapseclient.exceptions.SynapseHTTPError as err:
                 print(err)
-
+        else:
+            subprocess.check_call(
+                ["docker", "cp", os.path.abspath(log_filename),
+                 f"logging:/logs/{log_filename.replace('_log.txt', '')}/"]
+            )
 
 def remove_docker_container(container_name):
     """Remove docker container"""
@@ -149,12 +150,12 @@ def main(syn, args):
         while container in client.containers.list():
             log_text = container.logs()
             create_log_file(log_filename, log_text=log_text)
-            store_log_file(syn, log_filename, args.parentid)
+            store_log_file(syn, log_filename, args.parentid, store=args.store)
             time.sleep(60)
         # Must run again to make sure all the logs are captured
         log_text = container.logs()
         create_log_file(log_filename, log_text=log_text)
-        store_log_file(syn, log_filename, args.parentid)
+        store_log_file(syn, log_filename, args.parentid, store=args.store)
         # Remove container and image after being done
         container.remove()
 
@@ -162,7 +163,7 @@ def main(syn, args):
 
     if statinfo.st_size == 0:
         create_log_file(log_filename, log_text=errors)
-        store_log_file(syn, log_filename, args.parentid)
+        store_log_file(syn, log_filename, args.parentid, store=args.store)
 
     print("finished training")
     # Try to remove the image
@@ -180,25 +181,6 @@ def main(syn, args):
     # tar(output_dir, 'outputs.tar.gz')
 
 
-def quitting(signo, _frame, submissionid=None, docker_image=None,
-             parentid=None, syn=None):
-    """When quit signal, stop docker container and delete image"""
-    print("Interrupted by %d, shutting down" % signo)
-    # Make sure to store logs and remove containers
-    try:
-        cont = client.containers.get(submissionid)
-        log_text = cont.logs()
-        log_filename = submissionid + "_training_log.txt"
-        create_log_file(log_filename, log_text=log_text)
-        store_log_file(syn, log_filename, args.parentid)
-        cont.stop()
-        cont.remove()
-    except Exception:
-        pass
-    remove_docker_image(docker_image)
-    sys.exit(0)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--submissionid", required=True,
@@ -211,6 +193,8 @@ if __name__ == '__main__':
                         help="Input Directory")
     parser.add_argument("-c", "--synapse_config", required=True,
                         help="credentials file")
+    parser.add_argument("--store", action='store_true',
+                        help="to store logs")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
     parser.add_argument("--status", required=True, help="Docker image status")
@@ -218,13 +202,4 @@ if __name__ == '__main__':
     client = docker.from_env()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
-
-    docker_image = args.docker_repository + "@" + args.docker_digest
-
-    quit_sub = partial(quitting, submissionid=args.submissionid,
-                       docker_image=docker_image, parentid=args.parentid,
-                       syn=syn)
-    for sig in ('TERM', 'HUP', 'INT'):
-        signal.signal(getattr(signal, 'SIG'+sig), quit_sub)
-
     main(syn, args)

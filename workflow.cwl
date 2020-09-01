@@ -160,6 +160,8 @@ steps:
         source: "#submitterUploadSynId"
       - id: synapse_config
         source: "#synapseConfig"
+      - id: store
+        default: true
       - id: input_dir
         valueFrom: "/home01/centos/challenge_data/CM_026_formatted_synthetic_data_subset"
       - id: docker_script
@@ -278,6 +280,8 @@ steps:
         source: "#submitterUploadSynId"
       - id: synapse_config
         source: "#synapseConfig"
+      - id: store
+        default: false
       - id: input_dir
         valueFrom: "/home01/centos/challenge_data/CM_026_formatted_for_Challenge"
       - id: docker_script
