@@ -62,16 +62,22 @@ requirements:
               )
           else:
               subdf = pd.read_csv(args.submission_file)
+              golddf = pd.read_csv(args.goldstandard)
 
               if not all(subdf.columns == ["patientID", "prediction"]):
                   invalid_reasons.append("Submission must have patientID and prediction column")
-                  prediction_file_status = "INVALID"
-
-              all_numbers = all(subdf['prediction'].apply(
-                  lambda x: (isinstance(x, int) or isinstance(x, float)) and not math.isnan(x)
-              ))
-              if not all_numbers:
-                  invalid_reasons.append("Submission prediction column must be all numbers and not null")
+              else:
+                  all_numbers = all(subdf['prediction'].apply(
+                      lambda x: (isinstance(x, int) or isinstance(x, float)) and not math.isnan(x)
+                  ))
+                  if not all_numbers:
+                      invalid_reasons.append("Submission prediction column must be all numbers and not null")
+                  if subdf['patientID'].duplicated().any():
+                      invalid_reasons.append("Submission patientID column must not have any duplicated values")
+                  if subdf['patientID'].isnull().any():
+                      invalid_reasons.append("Submission patientID column must not have any null values")
+                  if all(golddf['patientID'].isin(subdf['patientID'])) and all(subdf['patientID'].isin(golddf['patientID'])):
+                      invalid_reasons.append("Submission patientID column must contain all and only ids from clinical file.")
 
           if invalid_reasons:
             prediction_file_status = "INVALID"
