@@ -128,7 +128,9 @@ steps:
   get_goldstandard:
     run: get_goldstandard.cwl
     in: []
-    out: [goldstandard]
+    out:
+      - id: goldstandard
+      - id: synthetic_goldstandard
 
   check_docker_status:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/check_status.cwl
@@ -213,6 +215,8 @@ steps:
         source: "#run_docker/predictions"
       - id: entity_type
         source: "#get_docker_submission/entity_type"
+      - id: goldstandard
+        source: "#get_goldstandard/synthetic_goldstandard"
     out:
       - id: results
       - id: status
@@ -335,6 +339,8 @@ steps:
         source: "#run_docker_real/predictions"
       - id: entity_type
         source: "#get_docker_submission/entity_type"
+      - id: goldstandard
+        source: "#get_goldstandard/goldstandard"
     out:
       - id: results
       - id: status

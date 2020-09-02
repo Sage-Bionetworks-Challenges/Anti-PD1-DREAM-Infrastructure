@@ -21,9 +21,16 @@ requirements:
           # docker cp /home01/centos/challenge_data/gold_standard_data.csv helper:/goldstandard/gold_standard_data.csv
           subprocess.check_call(["docker", "cp", "helper:/goldstandard/gold_standard_data.csv",
                                  "goldstandard.csv"])
+          subprocess.check_call(["docker", "cp", "helper:/goldstandard/synthetic_gold_standard_data.csv",
+                                 "synthetic_goldstandard.csv"])
      
 outputs:
   - id: goldstandard
     type: File
     outputBinding:
       glob: goldstandard.csv
+
+  - id: synthetic_goldstandard
+    type: File
+    outputBinding:
+      glob: synthetic_goldstandard.csv
