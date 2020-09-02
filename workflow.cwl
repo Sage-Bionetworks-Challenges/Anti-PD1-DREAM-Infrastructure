@@ -405,7 +405,7 @@ steps:
       - id: goldstandard
         source: "#get_goldstandard/goldstandard"
       - id: check_validation_finished 
-        source: "#check_status/finished"
+        source: "#check_status_real/finished"
       - id: question
         source: "#determine_question/question"
     out:
