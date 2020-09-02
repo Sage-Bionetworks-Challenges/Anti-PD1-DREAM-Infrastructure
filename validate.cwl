@@ -82,7 +82,7 @@ requirements:
                   print(subdf)
                   if all(golddf['patientID'].isin(subdf['patientID'])) and all(subdf['patientID'].isin(golddf['patientID'])):
                       invalid_reasons.append("Submission patientID column must contain all and only ids from clinical file.")
-
+                      exit()
           if invalid_reasons:
             prediction_file_status = "INVALID"
 
