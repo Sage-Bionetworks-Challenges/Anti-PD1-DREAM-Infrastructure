@@ -8,7 +8,7 @@ baseCommand: [Rscript, /score.R]
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn18404606/scoring:latest
+    dockerPull: docker.synapse.org/syn18404606/scoring:v1
 
 inputs:
   - id: inputfile
