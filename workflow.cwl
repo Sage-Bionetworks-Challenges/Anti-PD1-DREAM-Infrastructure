@@ -165,7 +165,7 @@ steps:
       - id: store
         default: true
       - id: input_dir
-        valueFrom: "/home01/centos/challenge_data/CM_026_formatted_synthetic_data_subset"
+        valueFrom: "/home01/centos/challenge_data/CM_026_formatted_synthetic_data"
       - id: docker_script
         default:
           class: File
