@@ -58,29 +58,6 @@ def remove_docker_image(image_name):
         print("Unable to remove image")
 
 
-def tar(directory, tar_filename):
-    """Tar all files in a directory and remove the files
-
-    Args:
-        directory: Directory path to files to tar
-        tar_filename:  tar file path
-    """
-    tar_command = ['tar', '-C', directory, '--remove-files', '.', '-cvzf',
-                   tar_filename]
-    subprocess.check_call(tar_command)
-
-
-def untar(directory, tar_filename):
-    """Untar a tar file into a directory
-
-    Args:
-        directory: Path to directory to untar files
-        tar_filename:  tar file path
-    """
-    untar_command = ['tar', '-C', directory, '-xvf', tar_filename]
-    subprocess.check_call(untar_command)
-
-
 def main(syn, args):
     """Run docker model"""
     if args.status == "INVALID":
@@ -176,9 +153,6 @@ def main(syn, args):
     elif "predictions.csv" not in output_folder:
         raise Exception("No 'predictions.csv' file written to /output, "
                         "please check inference docker")
-    # CWL has a limit of the array of files it can accept in a folder
-    # therefore creating a tarball is sometimes necessary
-    # tar(output_dir, 'outputs.tar.gz')
 
 
 if __name__ == '__main__':
