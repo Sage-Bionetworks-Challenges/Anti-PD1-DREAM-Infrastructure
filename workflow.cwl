@@ -265,6 +265,52 @@ steps:
         source: "#validation_email/finished"
     out: [finished]
 
+
+## SYNTHETIC QUEUE SCORING
+##########################
+
+  determine_question:
+    run: determine_question.cwl
+    in:
+      - id: queue
+        source: "#get_docker_submission/evaluation_id"
+    out:
+      - id: question
+
+  scoring:
+    run: score.cwl
+    in:
+      - id: inputfile
+        source: "#run_docker/predictions"
+      - id: goldstandard
+        source: "#get_goldstandard/goldstandard"
+      - id: check_validation_finished
+        source: "#check_status/finished"
+      - id: question
+        source: "#determine_question/question"
+    out:
+      - id: results
+
+  annotate_submission_with_output:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: annotation_values
+        source: "#scoring/results"
+      - id: to_public
+        default: false
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: previous_annotation_finished
+        source: "#annotate_validation_with_output/finished"
+    out: [finished]
+
+## VALIDATION QUEUE SCORING
+##########################
+
   # run_docker_real:
   #   run: run_docker.cwl
   #   in:
