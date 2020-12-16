@@ -385,8 +385,8 @@ steps:
         source: "#validation_real/status"
       - id: previous_annotation_finished
         source: "#annotate_validation_with_output_real/finished"
-      - id: previous_email_finished
-        source: "#validation_email_real/finished"
+      # - id: previous_email_finished
+      #   source: "#validation_email_real/finished"
     out: [finished]
 
   determine_question:
