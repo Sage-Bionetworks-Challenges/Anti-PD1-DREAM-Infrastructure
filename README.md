@@ -45,6 +45,9 @@ where:
 
 ## Creating logging Docker volume / container
 ```
-docker volume create --driver local --opt type=none --opt device=/path/to/logging/folder --opt o=bind  logging
-docker run -it --name logging -v logging:/logging centos /bin/bash
+docker volume create --driver local --opt type=none --opt device=~/logs --opt o=bind  logging
+# Must start logging container
+docker run --name logging -v logging:/logging centos
+# View logs in ~/logs
+ls ~/logs
 ```
