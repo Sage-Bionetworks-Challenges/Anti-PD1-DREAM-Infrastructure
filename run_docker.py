@@ -35,7 +35,7 @@ def store_log_file(syn, log_filename, parentid, store=True):
         else:
             subprocess.check_call(
                 ["docker", "cp", os.path.abspath(log_filename),
-                 "logging:/logs/"]
+                 "logging:/logging"]
             )
 
 def remove_docker_container(container_name):
