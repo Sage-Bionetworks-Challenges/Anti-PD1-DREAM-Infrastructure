@@ -421,7 +421,7 @@ steps:
       - id: results
         source: "#scoring/results"
       - id: private_annotations
-        default: ["tertiary_metric", "tertiary_metric_value"]
+        default: ["tertiary_metric", "tertiary_metric_score"]
     out: []
 
   annotate_submission_with_output:
