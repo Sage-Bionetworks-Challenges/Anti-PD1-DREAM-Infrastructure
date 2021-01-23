@@ -411,16 +411,18 @@ steps:
     out:
       - id: results
       
-  # score_email:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
-  #   in:
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: results
-  #       source: "#scoring/results"
-  #   out: []
+  score_email:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: results
+        source: "#scoring/results"
+      - id: private_annotations
+        default: ["tertiary_metric", "tertiary_metric_value"]
+    out: []
 
   annotate_submission_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/annotate_submission.cwl
