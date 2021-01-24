@@ -420,6 +420,8 @@ steps:
   #       source: "#synapseConfig"
   #     - id: results
   #       source: "#scoring/results"
+  #     - id: private_annotations
+  #       default: ["tertiary_metric", "tertiary_metric_value"]
   #   out: []
 
   annotate_submission_with_output:
