@@ -8,7 +8,7 @@ baseCommand: [Rscript, /score.R]
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn18404606/scoring:v2
+    dockerPull: docker.synapse.org/syn18404606/scoring:v3
 
 inputs:
   - id: inputfile
@@ -31,6 +31,11 @@ inputs:
     type: string?
     inputBinding:
       prefix: -q
+  
+  - id: submission_number
+    type: int?
+    inputBinding:
+      prefix: -s
 
   - id: check_validation_finished
     type: boolean?

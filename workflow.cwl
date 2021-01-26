@@ -397,6 +397,14 @@ steps:
     out:
       - id: question
 
+  # determine_submission_number:
+  #   run: determine_submission.cwl
+  #   in:
+  #     - id: queue
+  #       source: "#get_docker_submission/evaluation_id"
+  #   out:
+  #     - id: submission_number
+
   scoring:
     run: score.cwl
     in:
@@ -408,21 +416,24 @@ steps:
         source: "#check_status_real/finished"
       - id: question
         source: "#determine_question/question"
+      - id: submission_number
+        default: 0
+        # source: "#determine_submission_number/submission_number"
     out:
       - id: results
       
-  # score_email:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
-  #   in:
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: results
-  #       source: "#scoring/results"
-  #     - id: private_annotations
-  #       default: ["tertiary_metric", "tertiary_metric_value"]
-  #   out: []
+  score_email:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: results
+        source: "#scoring/results"
+      - id: private_annotations
+        default: ["primary_bootstrapped", "secondary_bootstrapped", "tertiary_bootstrapped", "tertiary_metric", "tertiary_metric_value"]
+    out: []
 
   annotate_submission_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/annotate_submission.cwl
