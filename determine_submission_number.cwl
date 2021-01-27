@@ -17,7 +17,7 @@ inputs:
       prefix: -s
 
   - id: queue
-    type: int
+    type: string
     inputBinding:
       prefix: -e
 
