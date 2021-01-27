@@ -398,7 +398,7 @@ steps:
       - id: question
 
   determine_submission_number:
-    run: determine_submission.cwl
+    run: determine_submission_number.cwl
     in:
       - id: submission_id
         source: "#submissionId"
