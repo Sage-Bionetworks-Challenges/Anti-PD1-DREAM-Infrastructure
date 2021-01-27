@@ -397,13 +397,19 @@ steps:
     out:
       - id: question
 
-  # determine_submission_number:
-  #   run: determine_submission.cwl
-  #   in:
-  #     - id: queue
-  #       source: "#get_docker_submission/evaluation_id"
-  #   out:
-  #     - id: submission_number
+  determine_submission_number:
+    run: determine_submission.cwl
+    in:
+      - id: submission_id
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: queue
+        source: "#get_docker_submission/evaluation_id"
+      - id: submission_view
+        valueFrom: "syn22340111"
+    out:
+      - id: submission_number
 
   scoring:
     run: score.cwl
@@ -417,8 +423,7 @@ steps:
       - id: question
         source: "#determine_question/question"
       - id: submission_number
-        default: 0
-        # source: "#determine_submission_number/submission_number"
+        source: "#determine_submission_number/submission_number"
     out:
       - id: results
       
