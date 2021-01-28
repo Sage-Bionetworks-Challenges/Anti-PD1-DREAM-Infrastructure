@@ -397,6 +397,20 @@ steps:
     out:
       - id: question
 
+  determine_submission_number:
+    run: determine_submission_number.cwl
+    in:
+      - id: submission_id
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: queue
+        source: "#get_docker_submission/evaluation_id"
+      - id: submission_view
+        valueFrom: "syn22340111"
+    out:
+      - id: submission_number
+
   scoring:
     run: score.cwl
     in:
@@ -408,6 +422,8 @@ steps:
         source: "#check_status_real/finished"
       - id: question
         source: "#determine_question/question"
+      - id: submission_number
+        source: "#determine_submission_number/submission_number"
     out:
       - id: results
       
@@ -421,7 +437,7 @@ steps:
   #     - id: results
   #       source: "#scoring/results"
   #     - id: private_annotations
-  #       default: ["tertiary_metric", "tertiary_metric_value"]
+  #       default: ["primary_bootstrapped", "secondary_bootstrapped", "tertiary_bootstrapped", "tertiary_metric", "tertiary_metric_value"]
   #   out: []
 
   annotate_submission_with_output:
