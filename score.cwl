@@ -33,7 +33,7 @@ inputs:
       prefix: -q
   
   - id: submission_number
-    type: int?
+    type: int
     inputBinding:
       prefix: -s
 
