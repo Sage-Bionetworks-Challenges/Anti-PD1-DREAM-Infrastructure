@@ -76,7 +76,7 @@ requirements:
                       invalid_reasons.append("Submission patientID column must not have any duplicated values")
                   if subdf['patientID'].isnull().any():
                       invalid_reasons.append("Submission patientID column must not have any null values")
-                  if not all(golddf['patientID'].isin(subdf['patientID'])) and not all(subdf['patientID'].isin(golddf['patientID'])):
+                  if not all(golddf['patientID'].isin(subdf['patientID'])) or not all(subdf['patientID'].isin(golddf['patientID'])):
                       invalid_reasons.append("Submission patientID column must contain all and only ids from clinical file.")
           if invalid_reasons:
             prediction_file_status = "INVALID"
