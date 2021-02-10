@@ -385,8 +385,8 @@ steps:
         source: "#validation_real/status"
       - id: previous_annotation_finished
         source: "#annotate_validation_with_output_real/finished"
-      # - id: previous_email_finished
-      #   source: "#validation_email_real/finished"
+      - id: previous_email_finished
+        source: "#validation_email_real/finished"
     out: [finished]
 
   determine_question:
@@ -437,7 +437,7 @@ steps:
       - id: results
         source: "#scoring/results"
       - id: private_annotations
-        default: ["primary_bootstrapped", "secondary_bootstrapped", "tertiary_bootstrapped", "tertiary_metric", "tertiary_metric_value"]
+        default: ["primary_bootstrapped", "secondary_bootstrapped", "secondary_quantiles", "chemoarm_bootstrapped", "chemoarm_quantiles"]
     out: []
 
   annotate_submission_with_output:
