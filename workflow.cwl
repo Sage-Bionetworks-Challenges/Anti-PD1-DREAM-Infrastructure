@@ -346,20 +346,20 @@ steps:
       - id: status
       - id: invalid_reasons
 
-  # validation_email_real:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/validate_email.cwl
-  #   in:
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: status
-  #       source: "#validation_real/status"
-  #     - id: invalid_reasons
-  #       source: "#validation_real/invalid_reasons"
-  #     - id: errors_only
-  #       default: true
-  #   out: [finished]
+  validation_email_real:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/validate_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: status
+        source: "#validation_real/status"
+      - id: invalid_reasons
+        source: "#validation_real/invalid_reasons"
+      - id: errors_only
+        default: true
+    out: [finished]
 
   annotate_validation_with_output_real:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/annotate_submission.cwl
@@ -385,8 +385,8 @@ steps:
         source: "#validation_real/status"
       - id: previous_annotation_finished
         source: "#annotate_validation_with_output_real/finished"
-      # - id: previous_email_finished
-      #   source: "#validation_email_real/finished"
+      - id: previous_email_finished
+        source: "#validation_email_real/finished"
     out: [finished]
 
   determine_question:
@@ -427,18 +427,18 @@ steps:
     out:
       - id: results
       
-  # score_email:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
-  #   in:
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: results
-  #       source: "#scoring/results"
-  #     - id: private_annotations
-  #       default: ["primary_bootstrapped", "secondary_bootstrapped", "tertiary_bootstrapped", "tertiary_metric", "tertiary_metric_value"]
-  #   out: []
+  score_email:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/score_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: results
+        source: "#scoring/results"
+      - id: private_annotations
+        default: ["primary_bootstrapped", "secondary_bootstrapped", "secondary_quantiles", "chemoarm_bootstrapped", "chemoarm_quantiles"]
+    out: []
 
   annotate_submission_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/annotate_submission.cwl
