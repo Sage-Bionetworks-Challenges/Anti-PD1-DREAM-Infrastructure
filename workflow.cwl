@@ -287,7 +287,7 @@ steps:
       - id: store
         default: false
       - id: input_dir
-        valueFrom: "/home01/centos/challenge_data/CM_026_formatted_for_Challenge"
+        valueFrom: "/home01/centos/challenge_data/CM_227_formatted_for_Challenge"
       - id: docker_script
         default:
           class: File
