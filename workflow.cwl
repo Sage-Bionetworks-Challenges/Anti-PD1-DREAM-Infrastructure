@@ -1,12 +1,12 @@
 #!/usr/bin/env cwl-runner
-#
-# Workflow for SC1
+
 # Inputs:
-#   submissionId: ID of the Synapse submission to process
-#   adminUploadSynId: ID of a folder accessible only to the submission queue administrator
-#   submitterUploadSynId: ID of a folder accessible to the submitter
-#   workflowSynapseId:  ID of the Synapse entity containing a reference to the workflow file(s)
-#
+#   submissionId: Submission ID
+#   synapseConfig: filepath to .synapseConfig file
+#   adminUploadSynId: Synapse Folder ID accessible by an admin
+#   submitterUploadSynId: Synapse Folder ID accessible by the submitter
+#   workflowSynapseId: Synapse File ID that links to the workflow archive
+
 cwlVersion: v1.0
 class: Workflow
 
@@ -14,28 +14,20 @@ requirements:
   - class: StepInputExpressionRequirement
 
 inputs:
-  - id: submissionId
-    type: int
-  - id: adminUploadSynId
-    type: string
-  - id: submitterUploadSynId
-    type: string
-  - id: workflowSynapseId
-    type: string
-  - id: synapseConfig
-    type: File
+  submissionId: int
+  synapseConfig: File
+  adminUploadSynId: string
+  submitterUploadSynId: string
+  workflowSynapseId: string
 
-# there are no output at the workflow engine level.  Everything is uploaded to Synapse
-outputs: []
+outputs: {}
 
 steps:
-
   set_submitter_folder_permissions:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/set_permissions.cwl
     in:
       - id: entityid
         source: "#submitterUploadSynId"
-      # Must update the principal id here
       - id: principalid
         valueFrom: "3386496"
       - id: permissions
@@ -126,7 +118,7 @@ steps:
     out: [finished]
 
   get_goldstandard:
-    run: get_goldstandard.cwl
+    run: steps/get_goldstandard.cwl
     in: []
     out:
       - id: goldstandard
@@ -144,7 +136,7 @@ steps:
     out: [finished]
 
   run_docker:
-    run: run_docker.cwl
+    run: steps/run_docker.cwl
     in:
       - id: docker_repository
         source: "#get_docker_submission/docker_repository"
@@ -169,7 +161,7 @@ steps:
       - id: docker_script
         default:
           class: File
-          location: "run_docker.py"
+          location: "steps/run_docker.py"
     out:
       - id: predictions
 
@@ -209,7 +201,7 @@ steps:
     out: [finished]
 
   validation:
-    run: validate.cwl
+    run: steps/validate.cwl
     in:
       - id: inputfile
         source: "#run_docker/predictions"
@@ -266,7 +258,7 @@ steps:
     out: [finished]
 
   run_docker_real:
-    run: run_docker.cwl
+    run: steps/run_docker.cwl
     in:
       - id: docker_repository
         source: "#get_docker_submission/docker_repository"
@@ -291,7 +283,7 @@ steps:
       - id: docker_script
         default:
           class: File
-          location: "run_docker.py"
+          location: "steps/run_docker.py"
       - id: previous
         source: "#check_status/finished"
     out:
@@ -333,7 +325,7 @@ steps:
     out: [finished]
 
   validation_real:
-    run: validate.cwl
+    run: steps/validate.cwl
     in:
       - id: inputfile
         source: "#run_docker_real/predictions"
@@ -390,7 +382,7 @@ steps:
     out: [finished]
 
   determine_question:
-    run: determine_question.cwl
+    run: steps/determine_question.cwl
     in:
       - id: queue
         source: "#get_docker_submission/evaluation_id"
@@ -398,7 +390,7 @@ steps:
       - id: question
 
   determine_submission_number:
-    run: determine_submission_number.cwl
+    run: steps/determine_submission_number.cwl
     in:
       - id: submission_id
         source: "#submissionId"
@@ -412,7 +404,7 @@ steps:
       - id: submission_number
 
   scoring:
-    run: score.cwl
+    run: steps/score.cwl
     in:
       - id: inputfile
         source: "#run_docker_real/predictions"
