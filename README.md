@@ -123,7 +123,7 @@ cwl-runner workflow.cwl \
 
 <!-- Links -->
 
-[Anti-PD1 Response Prediction DREAM Challenge]: https://www.synapse.org/brats2021
+[Anti-PD1 Response Prediction DREAM Challenge]: https://www.synapse.org/CheckmateChallenge
 [ChallengeWorkflowTemplates]: https://github.com/Sage-Bionetworks/ChallengeWorkflowTemplates
 [configuration file]: https://docs.synapse.org/articles/client_configuration.html#for-developers
 [Synapse submission]: https://docs.synapse.org/articles/evaluation_queues.html#submissions
