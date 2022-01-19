@@ -23,7 +23,7 @@ Project.  Paste the link above under **URL**, and name it whatever you like,
 e.g. `workflow`.
 
 Once the File Link has been created, add a new annotation called `ROOT_TEMPLATE`
-and give it the value of 	Anti-PD1-DREAM-Infrastructure-master/workflow.cwl`.
+and give it the value of `Anti-PD1-DREAM-Infrastructure-master/workflow.cwl`.
 This annotation will notify the [Synapse Workflow Orchestrator] as to which
 file within the zipped archive is the workflow script to run.
 
